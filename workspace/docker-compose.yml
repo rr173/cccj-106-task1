@@ -1,0 +1,27 @@
+services:
+  contract-registry:
+    build: .
+    image: contract-registry:1.0.0
+    container_name: contract-registry
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: "8080"
+      CONTRACT_REGISTRY_DB: /data/registry.db
+      # 紧急豁免最长有效期（天），到期自动失效。
+      MAX_EXEMPTION_DAYS: "14"
+      # 生产环境保持 0；置 1 才允许用 X-Now 请求头注入时间（仅供测试）。
+      ALLOW_TIME_OVERRIDE: "0"
+    volumes:
+      - registry-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python3", "-c",
+             "import json,urllib.request; r=urllib.request.urlopen('http://127.0.0.1:8080/health', timeout=2); assert json.load(r)['status']=='ok'"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+volumes:
+  registry-data:
