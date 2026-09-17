@@ -1,0 +1,22 @@
+services:
+  registry:
+    build: .
+    image: contract-registry:latest
+    ports:
+      - "8000:8000"
+    environment:
+      PORT: "8000"
+      DATA_FILE: /data/registry.json
+      # 紧急豁免最长有效期（天）
+      MAX_EXEMPTION_DAYS: "30"
+    volumes:
+      - registry-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8000/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+
+volumes:
+  registry-data:

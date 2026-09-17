@@ -1,0 +1,17 @@
+{
+  "name": "contract-registry",
+  "version": "1.0.0",
+  "description": "API contract registry and evolution system for service teams",
+  "license": "MIT",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test test/"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
